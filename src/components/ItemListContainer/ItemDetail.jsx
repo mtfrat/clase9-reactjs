@@ -1,53 +1,22 @@
-// Editar este
 import { Card } from "react-bootstrap"
+import ItemCount from "./ItemCount"
 import { useState} from "react"
+import Button from "@restart/ui/esm/Button"
 import { Link } from "react-router-dom"
-
-const ItemCount = ({stock, initial}) => {
-
-    // Inicializo cuenta
-    const [count, setCount] = useState(initial)
-
-    const suma = () =>{
-        count < stock ? setCount(count+1) : setCount(count)
-    }
-
-    const resta = () =>{
-        count > 1 ? setCount(count-1) : setCount(count)
-    }
-
-    // Verifico con un booleano si es suma o resta
-    const handleBotones = (verificador) => {
-        verificador ? suma() : resta()
-    }
-
-    return (
-        <div>
-            <div style={{display:"flex",justifyContent:"space-around"}}>
-                <button className="btn btn-dark" variant="primary" onClick={()=>handleBotones(false)}>
-                    -
-                </button>
-                <p>{count}</p>
-                <button className="btn btn-dark" variant="primary" onClick={()=>handleBotones(true)}>
-                    +
-                </button>
-            </div>
-            <Link to='/carrito'>
-                <button className="btn btn-dark" variant="primary">
-                    Agregar al carrito
-                </button>
-            </Link>
-        </div>
-    )
-}
 
 //Muestro el item
 const ItemDetail = ({item}) => {
 
+    // Me va a indicar si el boton de compra fue presionado
+    const [botonCompra, setBotonCompra] = useState(false)
+
+    //  Verifico si se presiono el boton agregar al carrito
+    const handleCarrito = () =>{
+        setBotonCompra(true)
+    }
+
     let stock = 10
     let inicial = 1
-
-    console.log(item)
 
     return (
         <>
@@ -69,7 +38,20 @@ const ItemDetail = ({item}) => {
                         <Card.Text>
                         {item[0].precio}
                         </Card.Text>
-                        <ItemCount stock = {stock} initial = {inicial}/>
+                        {
+                            botonCompra?
+                                <div>
+                                    <Link to='/carrito'>
+                                        <Button className="btn btn-dark" variant="primary">
+                                            Comprar
+                                        </Button>
+                                    </Link>
+                                </div>
+                            :
+                                <div>
+                                    <ItemCount stock = {stock} initial = {inicial} compra={handleCarrito}/>
+                                </div>
+                        }
                     </Card.Body>
                 </Card>
             
